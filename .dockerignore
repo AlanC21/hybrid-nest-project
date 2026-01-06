@@ -1,4 +1,10 @@
 node_modules
 dist
-.env
+.git
+.serverless
+.esbuild
+coverage
 test
+README.md
+Dockerfile
+.env

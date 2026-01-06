@@ -1,0 +1,55 @@
+service: hybrid-nest-project
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-2
+  memorySize: 512
+  environment:
+    NODE_ENV: production
+
+functions:
+  main:
+    handler: dist/lambda.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+          cors: true
+      - http:
+          method: ANY
+          path: '{proxy+}'
+          cors: true
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: false
+    external:
+      - '@nestjs/common'
+      - '@nestjs/core'
+      - '@nestjs/platform-express'
+      - '@nestjs/microservices'
+      - '@nestjs/websockets'
+      - '@codegenie/serverless-express'
+      - 'aws-lambda'
+      - 'class-transformer'
+      - 'class-validator'
+      - 'reflect-metadata'
+      - 'rxjs'
+
+package:
+  individually: true
+  patterns:
+    - '!node_modules/@types/**'
+    - '!node_modules/typescript/**'
+    - '!node_modules/@nestjs/testing/**'
+    - '!node_modules/@nestjs/cli/**'
+    - '!node_modules/@nestjs/schematics/**'
+
+
+plugins:
+  - serverless-offline
